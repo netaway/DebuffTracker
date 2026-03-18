@@ -176,40 +176,44 @@ public static class DebuffCatalog
         Color:       RGB(200, 240, 255)
     );
 
+    // "shocked"        — single buff, magnitude = % increased damage taken (0–50%)
+    // "stacking_shock" — up to 49 stacks, each stack adds 2% (Skitterbots etc.)
     public static readonly DebuffDefinition Shock = new(
         BuffId:      "shocked",
         DisplayName: "Shock",
         Category:    DebuffCategory.AilmentNonDmg,
+        Color:       RGB(255, 255, 80)
+    );
+
+    public static readonly DebuffDefinition StackingShock = new(
+        BuffId:      "stacking_shock",
+        DisplayName: "Shock (stacking)",
+        Category:    DebuffCategory.AilmentNonDmg,
         Color:       RGB(255, 255, 80),
-        ValueType:   DebuffValueType.Magnitude,
-        ValueSuffix: "%"
+        ValueType:   DebuffValueType.Stacks,
+        MaxStacks:   49,
+        ValueSuffix: "x"
     );
 
     public static readonly DebuffDefinition Scorch = new(
         BuffId:      "scorched",
         DisplayName: "Scorch",
         Category:    DebuffCategory.AilmentNonDmg,
-        Color:       RGB(255, 160, 60),
-        ValueType:   DebuffValueType.Magnitude,
-        ValueSuffix: "% -res"
+        Color:       RGB(255, 160, 60)
     );
 
     public static readonly DebuffDefinition Brittle = new(
         BuffId:      "brittle",
         DisplayName: "Brittle",
         Category:    DebuffCategory.AilmentNonDmg,
-        Color:       RGB(180, 230, 255),
-        ValueType:   DebuffValueType.Magnitude,
-        ValueSuffix: "% crit"
+        Color:       RGB(180, 230, 255)
     );
 
     public static readonly DebuffDefinition Sap = new(
         BuffId:      "sapped",
         DisplayName: "Sap",
         Category:    DebuffCategory.AilmentNonDmg,
-        Color:       RGB(200, 200, 100),
-        ValueType:   DebuffValueType.Magnitude,
-        ValueSuffix: "% -dmg"
+        Color:       RGB(200, 200, 100)
     );
 
     // -------------------------------------------------------------------------
@@ -287,7 +291,7 @@ public static class DebuffCatalog
         Ignite, Bleed, Poison,
 
         // Non-damaging ailments
-        Chill, Freeze, Shock, Scorch, Brittle, Sap,
+        Chill, Freeze, Shock, StackingShock, Scorch, Brittle, Sap,
 
         // Special debuffs
         Withered, Impale, Maim, Hinder, Blind, Intimidate, Unnerve,

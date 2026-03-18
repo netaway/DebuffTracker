@@ -62,9 +62,6 @@ public static class DebuffReader
 
             case DebuffValueType.Magnitude:
             {
-                // For ailments like Shock, the magnitude is stored in buff.Timer.
-                // Note: buff.Timer may not be the real magnitude in all cases —
-                // check poedb.tw for the exact field exposed by ExileApi per ailment.
                 float magnitude = 0f;
                 bool found = false;
 
@@ -72,7 +69,7 @@ public static class DebuffReader
                 {
                     if (buff.Name != def.BuffId) continue;
                     found = true;
-                    magnitude = buff.Timer * 100f; // heuristic: normalize to 0–100 range
+                    magnitude = buff.Timer;
                     break;
                 }
 

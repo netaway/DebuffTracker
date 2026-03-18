@@ -24,9 +24,6 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         { DebuffCategory.Special,       "Special"  },
     };
 
-    // Prevents the HUD window from being drawn more than once per frame
-    private long _lastRenderedFrame = -1;
-
     // -------------------------------------------------------------------------
     // Settings UI — collapsible categories
     // -------------------------------------------------------------------------
@@ -99,7 +96,8 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
             ImGui.Indent();
             DrawToggle("Chill",   s.TrackChill);
             DrawToggle("Freeze",  s.TrackFreeze);
-            DrawToggle("Shock",   s.TrackShock);
+            DrawToggle("Shock",          s.TrackShock);
+            DrawToggle("Shock (stacking)", s.TrackStackingShock);
             DrawToggle("Scorch",  s.TrackScorch);
             DrawToggle("Brittle", s.TrackBrittle);
             DrawToggle("Sap",     s.TrackSap);
@@ -174,6 +172,7 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         if (s.TrackChill.Value)             active.Add(DebuffCatalog.Chill);
         if (s.TrackFreeze.Value)            active.Add(DebuffCatalog.Freeze);
         if (s.TrackShock.Value)             active.Add(DebuffCatalog.Shock);
+        if (s.TrackStackingShock.Value)  active.Add(DebuffCatalog.StackingShock);
         if (s.TrackScorch.Value)            active.Add(DebuffCatalog.Scorch);
         if (s.TrackBrittle.Value)           active.Add(DebuffCatalog.Brittle);
         if (s.TrackSap.Value)               active.Add(DebuffCatalog.Sap);
@@ -196,11 +195,6 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
     public override void Render()
     {
         if (!Settings.Enable) return;
-
-        // Guard against Render() being called more than once per frame
-        var currentFrame = GameController.IngameState.UpdateCount;
-        if (currentFrame == _lastRenderedFrame) return;
-        _lastRenderedFrame = currentFrame;
 
         var definitions = GetActiveDefinitions();
 

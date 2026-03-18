@@ -50,7 +50,8 @@ public class DebuffTrackerSettings : ISettings
     // Ailments — Non-Damaging
     public ToggleNode TrackChill   { get; set; } = new ToggleNode(false);
     public ToggleNode TrackFreeze  { get; set; } = new ToggleNode(false);
-    public ToggleNode TrackShock   { get; set; } = new ToggleNode(false);
+    public ToggleNode TrackShock        { get; set; } = new ToggleNode(false);
+    public ToggleNode TrackStackingShock { get; set; } = new ToggleNode(false);
     public ToggleNode TrackScorch  { get; set; } = new ToggleNode(false);
     public ToggleNode TrackBrittle { get; set; } = new ToggleNode(false);
     public ToggleNode TrackSap     { get; set; } = new ToggleNode(false);

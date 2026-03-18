@@ -32,19 +32,14 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         var s = Settings;
 
         // General
-        if (ImGui.CollapsingHeader("General"))
-        {
-            ImGui.Indent();
-            DrawToggle("Show Position Preview",          s.ShowPreview);
-            DrawToggle("Uppercase Text (simulates bold)", s.ShowBold);
-            DrawToggle("Hide Inactive Debuffs",          s.HideInactive);
-            DrawToggle("Group by Category",              s.GroupByCategory);
-            ImGui.Separator();
-            DrawSliderInt("Position X",                  s.HudX,       0, 3840);
-            DrawSliderInt("Position Y",                  s.HudY,       0, 2160);
-            DrawSliderInt("Window Opacity (0=invisible, 100=solid)", s.WindowAlpha, 0, 100);
-            ImGui.Unindent();
-        }
+        DrawToggle("Show Position Preview",           s.ShowPreview);
+        DrawToggle("Uppercase Text (simulates bold)", s.ShowBold);
+        DrawToggle("Hide Inactive Debuffs",           s.HideInactive);
+        DrawToggle("Group by Category",               s.GroupByCategory);
+        DrawSliderInt("Position X",                   s.HudX,       0, 3840);
+        DrawSliderInt("Position Y",                   s.HudY,       0, 2160);
+        DrawSliderInt("Window Opacity (0=invisible, 100=solid)", s.WindowAlpha, 0, 100);
+        ImGui.Separator();
 
         // Monster Rarities
         if (ImGui.CollapsingHeader("Monster Rarities"))

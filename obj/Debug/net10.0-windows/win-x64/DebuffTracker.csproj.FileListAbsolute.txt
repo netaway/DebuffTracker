@@ -1,0 +1,11 @@
+D:\EA5\Plugins\Temp\DebuffTracker\DebuffTracker.deps.json
+D:\EA5\Plugins\Temp\DebuffTracker\DebuffTracker.dll
+D:\EA5\Plugins\Temp\DebuffTracker\DebuffTracker.pdb
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\DebuffTracker.csproj.AssemblyReference.cache
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\DebuffTracker.GeneratedMSBuildEditorConfig.editorconfig
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\DebuffTracker.csproj.CoreCompileInputs.cache
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\DebuffTracker.sourcelink.json
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\DebuffTracker.dll
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\refint\DebuffTracker.dll
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\DebuffTracker.pdb
+D:\EA5\Plugins\Source\DebuffTracker\obj\Debug\net10.0-windows\win-x64\ref\DebuffTracker.dll

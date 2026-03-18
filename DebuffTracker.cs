@@ -17,12 +17,128 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
 
     private static readonly Dictionary<DebuffCategory, string> CategoryLabels = new()
     {
-        { DebuffCategory.Hex,           "Hexes"              },
-        { DebuffCategory.Mark,          "Marks"              },
-        { DebuffCategory.AilmentDmg,    "Ailments (Dmg)"    },
-        { DebuffCategory.AilmentNonDmg, "Ailments (Non-Dmg)"},
-        { DebuffCategory.Special,       "Special"            },
+        { DebuffCategory.Hex,           "Hexes"    },
+        { DebuffCategory.Mark,          "Marks"    },
+        { DebuffCategory.AilmentDmg,    "Ailments" },
+        { DebuffCategory.AilmentNonDmg, "Ailments" },
+        { DebuffCategory.Special,       "Special"  },
     };
+
+    // -------------------------------------------------------------------------
+    // Settings UI — collapsible categories
+    // -------------------------------------------------------------------------
+    public override void DrawSettings()
+    {
+        var s = Settings;
+
+        // General
+        if (ImGui.CollapsingHeader("General"))
+        {
+            ImGui.Indent();
+            DrawToggle("Show Position Preview",          s.ShowPreview);
+            DrawToggle("Uppercase Text (simulates bold)", s.ShowBold);
+            DrawToggle("Hide Inactive Debuffs",          s.HideInactive);
+            DrawToggle("Group by Category",              s.GroupByCategory);
+            ImGui.Separator();
+            DrawSliderInt("Position X",                  s.HudX,       0, 3840);
+            DrawSliderInt("Position Y",                  s.HudY,       0, 2160);
+            DrawSliderInt("Window Opacity (0=invisible, 100=solid)", s.WindowAlpha, 0, 100);
+            ImGui.Unindent();
+        }
+
+        // Monster Rarities
+        if (ImGui.CollapsingHeader("Monster Rarities"))
+        {
+            ImGui.Indent();
+            DrawToggle("Show Magic Monsters",  s.ShowMagic);
+            DrawToggle("Show Rare Monsters",   s.ShowRare);
+            DrawToggle("Show Unique Monsters", s.ShowUnique);
+            ImGui.Unindent();
+        }
+
+        // Hexes
+        if (ImGui.CollapsingHeader("Hexes"))
+        {
+            ImGui.Indent();
+            DrawToggle("Conductivity",      s.TrackConductivity);
+            DrawToggle("Vulnerability",     s.TrackVulnerability);
+            DrawToggle("Flammability",      s.TrackFlammability);
+            DrawToggle("Frostbite",         s.TrackFrostbite);
+            DrawToggle("Enfeeble",          s.TrackEnfeeble);
+            DrawToggle("Temporal Chains",   s.TrackTemporalChains);
+            DrawToggle("Elemental Weakness",s.TrackElementalWeakness);
+            DrawToggle("Despair",           s.TrackDespair);
+            DrawToggle("Punishment",        s.TrackPunishment);
+            ImGui.Unindent();
+        }
+
+        // Marks
+        if (ImGui.CollapsingHeader("Marks"))
+        {
+            ImGui.Indent();
+            DrawToggle("Assassin's Mark",  s.TrackAssassinsMark);
+            DrawToggle("Poacher's Mark",   s.TrackPoachersMark);
+            DrawToggle("Sniper's Mark",    s.TrackSnipersMark);
+            DrawToggle("Warlord's Mark",   s.TrackWarlordsMark);
+            DrawToggle("Alchemist's Mark", s.TrackAlchemistsMark);
+            DrawToggle("Penance Mark",     s.TrackPenanceMark);
+            ImGui.Unindent();
+        }
+
+        // Ailments (Damaging)
+        if (ImGui.CollapsingHeader("Ailments (Damaging)"))
+        {
+            ImGui.Indent();
+            DrawToggle("Ignite", s.TrackIgnite);
+            DrawToggle("Bleed",  s.TrackBleed);
+            DrawToggle("Poison", s.TrackPoison);
+            ImGui.Unindent();
+        }
+
+        // Ailments (Non-Damaging)
+        if (ImGui.CollapsingHeader("Ailments (Non-Damaging)"))
+        {
+            ImGui.Indent();
+            DrawToggle("Chill",   s.TrackChill);
+            DrawToggle("Freeze",  s.TrackFreeze);
+            DrawToggle("Shock",   s.TrackShock);
+            DrawToggle("Scorch",  s.TrackScorch);
+            DrawToggle("Brittle", s.TrackBrittle);
+            DrawToggle("Sap",     s.TrackSap);
+            ImGui.Unindent();
+        }
+
+        // Special Debuffs
+        if (ImGui.CollapsingHeader("Special Debuffs"))
+        {
+            ImGui.Indent();
+            DrawToggle("Withered",   s.TrackWithered);
+            DrawToggle("Impale",     s.TrackImpale);
+            DrawToggle("Maim",       s.TrackMaim);
+            DrawToggle("Hinder",     s.TrackHinder);
+            DrawToggle("Blind",      s.TrackBlind);
+            DrawToggle("Intimidate", s.TrackIntimidate);
+            DrawToggle("Unnerve",    s.TrackUnnerve);
+            ImGui.Unindent();
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // DrawSettings helpers
+    // -------------------------------------------------------------------------
+    private static void DrawToggle(string label, ExileCore.Shared.Nodes.ToggleNode node)
+    {
+        var value = node.Value;
+        if (ImGui.Checkbox(label, ref value))
+            node.Value = value;
+    }
+
+    private static void DrawSliderInt(string label, ExileCore.Shared.Nodes.RangeNode<int> node, int min, int max)
+    {
+        var value = node.Value;
+        if (ImGui.SliderInt(label, ref value, min, max))
+            node.Value = value;
+    }
 
     // -------------------------------------------------------------------------
     // Build the active definition list from current settings
@@ -134,6 +250,7 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         var flags = ImGuiWindowFlags.NoTitleBar
                   | ImGuiWindowFlags.NoResize
                   | ImGuiWindowFlags.NoScrollbar
+                  | ImGuiWindowFlags.NoInputs
                   | ImGuiWindowFlags.NoCollapse
                   | ImGuiWindowFlags.NoNav
                   | ImGuiWindowFlags.NoMove
@@ -173,7 +290,6 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         DrawHeader("[ DEBUFF TRACKER - PREVIEW ] (drag to reposition)");
         ImGui.Separator();
 
-        // Simulate a monster with alternating active/inactive debuffs
         var fakeStates = definitions.Select((def, i) => new DebuffState
         {
             Definition = def,
@@ -192,7 +308,7 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
     }
 
     // -------------------------------------------------------------------------
-    // Drawing helpers
+    // HUD drawing helpers
     // -------------------------------------------------------------------------
     private void DrawHeader(string text)
     {
@@ -219,11 +335,9 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         {
             if (Settings.HideInactive.Value && !group.Any(s => s.IsActive)) continue;
 
-            if (ImGui.CollapsingHeader(CategoryLabels[group.Key], ImGuiTreeNodeFlags.DefaultOpen))
-            {
-                foreach (var state in group)
-                    DrawDebuffLine(state);
-            }
+            ImGui.TextColored(ColorMissing, $"  {CategoryLabels[group.Key]}:");
+            foreach (var state in group)
+                DrawDebuffLine(state);
         }
     }
 

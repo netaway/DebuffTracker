@@ -24,6 +24,9 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         { DebuffCategory.Special,       "Special"  },
     };
 
+    // Prevents the HUD window from being drawn more than once per frame
+    private long _lastRenderedFrame = -1;
+
     // -------------------------------------------------------------------------
     // Settings UI — collapsible categories
     // -------------------------------------------------------------------------
@@ -194,6 +197,11 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
     {
         if (!Settings.Enable) return;
 
+        // Guard against Render() being called more than once per frame
+        var currentFrame = GameController.IngameState.UpdateCount;
+        if (currentFrame == _lastRenderedFrame) return;
+        _lastRenderedFrame = currentFrame;
+
         var definitions = GetActiveDefinitions();
 
         if (Settings.ShowPreview.Value)
@@ -210,6 +218,8 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
                 (e.Rarity == MonsterRarity.Unique && Settings.ShowUnique.Value ||
                  e.Rarity == MonsterRarity.Rare   && Settings.ShowRare.Value   ||
                  e.Rarity == MonsterRarity.Magic  && Settings.ShowMagic.Value))
+            .GroupBy(e => e.Id)
+            .Select(g => g.First())
             .ToList();
 
         if (monsters.Count == 0) return;

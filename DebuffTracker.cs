@@ -17,11 +17,11 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
 
     private static readonly Dictionary<DebuffCategory, string> CategoryLabels = new()
     {
-        { DebuffCategory.Hex,           "Hexes"    },
-        { DebuffCategory.Mark,          "Marks"    },
-        { DebuffCategory.AilmentDmg,    "Ailments" },
-        { DebuffCategory.AilmentNonDmg, "Ailments" },
-        { DebuffCategory.Special,       "Special"  },
+        { DebuffCategory.Hex,           "Hexes"              },
+        { DebuffCategory.Mark,          "Marks"              },
+        { DebuffCategory.AilmentDmg,    "Ailments (Dmg)"    },
+        { DebuffCategory.AilmentNonDmg, "Ailments (Non-Dmg)"},
+        { DebuffCategory.Special,       "Special"            },
     };
 
     // -------------------------------------------------------------------------
@@ -134,7 +134,6 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         var flags = ImGuiWindowFlags.NoTitleBar
                   | ImGuiWindowFlags.NoResize
                   | ImGuiWindowFlags.NoScrollbar
-                  | ImGuiWindowFlags.NoInputs
                   | ImGuiWindowFlags.NoCollapse
                   | ImGuiWindowFlags.NoNav
                   | ImGuiWindowFlags.NoMove
@@ -220,9 +219,11 @@ public class DebuffTracker : BaseSettingsPlugin<DebuffTrackerSettings>
         {
             if (Settings.HideInactive.Value && !group.Any(s => s.IsActive)) continue;
 
-            ImGui.TextColored(ColorMissing, $"  {CategoryLabels[group.Key]}:");
-            foreach (var state in group)
-                DrawDebuffLine(state);
+            if (ImGui.CollapsingHeader(CategoryLabels[group.Key], ImGuiTreeNodeFlags.DefaultOpen))
+            {
+                foreach (var state in group)
+                    DrawDebuffLine(state);
+            }
         }
     }
 
